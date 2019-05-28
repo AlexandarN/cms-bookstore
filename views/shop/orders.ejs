@@ -1,0 +1,75 @@
+<%- include('../includes/head.ejs') %>
+     <link rel="stylesheet" href="/css/table.css">
+</head>
+
+<body>
+     <%- include('../includes/nav.ejs') %>
+
+     <main>
+          <h2 style="text-decoration:underline">These are your orders:</h2>
+
+          <% if(messages.length > 0) { %>
+               <h2 class="message message-error"><%= messages %></h2>
+               <br>
+          <% } %>
+
+          <% if(ordrs.length > 0) { %>
+          <table>
+               <thead>
+                    <tr>
+                         <th>Order id</th>
+                         <th>Products</th>
+                         <th>Order price</th>
+                    </tr>
+               </thead>
+
+               <% ordrs.forEach(ord => { %>
+               <tbody>
+                    <tr class="fat-border">
+                         <td><%= ord._id %></td>
+                         <td class="left-align">
+                              <table>
+                                   <tr>
+                                        <th class="fixed-width">Product</th>
+                                        <th class="fixed-width-2">Quantity</th>
+                                        <th class="fixed-width-2">Unit price</th>
+                                        <th class="fixed-width-2">Price</th>
+                                   </tr>
+
+                                   <% ord.items.forEach(item => { %>
+                                   <tr class="no-border">
+                                        <td class="left-align fixed-width"><%= item.product.title %></td>
+                                        <td><%= item.quantity %></td>
+                                        <td>$ <%= item.product.price %></td>
+                                        <td>$ <%= item.qtyPrice %></td>
+                                   </tr>
+                                   <% }); %>
+
+                              </table> 
+                         </td>
+                         <td>$ <%= ord.orderPrice %></td>
+                         <td>
+                              <a class="btn" href="/orders/<%= ord._id %>">Create Invoice</a>
+                              <% }); %>
+                         </td>
+                    </tr>
+               </tbody>
+               <tfoot>
+                    <tr>
+                         <td class="left-align"><b>Total price</b></td>
+                         <td></td>
+                         <td><b>$ <%= totalPrc %></b></td>
+                         <td class="no-border"></td>
+                    </tr>
+               </tfoot>
+          </table>
+          
+          <br>
+          <h4>Would you like to send confirmation email?</h4>
+          <button type="submit" class="btn">Send Email</button>
+
+          <% } else { %>
+          <h3>You don't have any orders!</h3>
+          <% } %>
+     </main>
+     <%- include('../includes/end.ejs') %>

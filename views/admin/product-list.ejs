@@ -1,0 +1,65 @@
+<%- include('../includes/head.ejs') %>
+     <link rel="stylesheet" href="/css/table.css">
+</head>
+
+<body>
+     <%- include('../includes/nav.ejs') %>
+
+     <main>
+          <h2>Administer products:</h2>
+
+          <% if(messages.length > 0) { %>
+               <h2 class="message message-error"><%= messages %></h2>
+               <br>
+          <% } %>
+
+          <% if (prods.length > 0) { %>
+               <table>
+                    <thead>
+                         <tr>
+                              <th>Product title</th>
+                              <th>Product id</th>
+                              <th>Image</th>
+                              <th>Product description</th>
+                              <th>Quantity in stock</th>
+                              <th>Unit price</th>
+                              <th>Options</th>
+                         </tr>
+                    </thead>
+                    <tbody>
+
+                    <% prods.forEach(prod => { %>
+                         <tr>
+                              <td class="left-align"><a href="/product/<%= prod.id %>"><%= prod.title %></a></td>
+                              <td><%= prod.id %></td>
+                              <td class="ellipsis"><img src="/<%= prod.imageUrl %>" alt="<%= prod.title %>"></td>
+                              <td class="ellipsis"><%= prod.description %></td>
+                              <td>2</td>
+                              <td>$<%= prod.price %></td>
+                              <td>
+                                   <div class="options" >
+                                        <a href="/admin/edit-product/<%= prod._id %>?edit=true" class="btn">Edit</a>
+                                        <span>&nbsp&nbsp</span>
+                                        <input type="hidden" name="productId" value="<%= prod._id %>">
+                                        
+                                        <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                                        <button class="btn" type="button" onclick="deleteProduct(this)">Delete</button>
+                                   </div>
+                              </td>
+                         </tr>
+                    <% }); %>     
+                         
+                    </tbody>
+               </table>
+
+          <% } else { %>
+               <h1>No products found!</h1>
+          <% } %>
+
+          <h4>Add new product</h4>
+          <a href="/admin/add-product" class="btn">Add Product</a>
+     </main>     
+     
+     <%- include('../includes/end.ejs') %>
+
+     <script src="/js/adminAsync.js"></script>

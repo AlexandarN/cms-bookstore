@@ -1,0 +1,76 @@
+<%- include('../includes/head.ejs') %>
+     <link rel="stylesheet" href="/css/table.css">
+</head>
+
+<body>
+     <%- include('../includes/nav.ejs') %>
+
+     <main>
+          <h2>This is the checkout page:</h2>
+
+          <% if(prods.length > 0) { %>
+               <table>
+                    <thead>
+                         <tr>
+                              <th>Product</th>
+                              <th>Image</th>
+                              <th>Quantity</th>
+                              <th>Unit price</th>
+                              <th>Price</th>
+                              <th></th>
+                         </tr>
+                    </thead>
+
+                    <% prods.forEach(prod => { %>
+                    <tbody>
+                         <tr>
+                              <td class="left-align"><%= prod.productId.title %></td>
+                              <td class="ellipsis" alt="<%= prod.productId.title %>"><img src="/<%= prod.productId.imageUrl %>"></td>
+                              <td><%= prod.quantity %></td>
+                              <td>$ <%= prod.productId.price %></td>
+                              <td>$ <%= prod.qtyPrice %></td>
+                         </tr>
+                    </tbody>
+                    <% }); %>
+
+                    <tfoot>
+                         <tr>
+                              <td class="left-align"><b>Total price</b></td>
+                              <td></td>
+                              <td></td>
+                              <td></td>
+                              <td><b>$ <%= totalPrc %></b></td>
+                         </tr>
+                    </tfoot>
+               </table>
+
+               <h4>Total amount of your order is $ <%= totalPrc %>!</h4>
+               <h3>Would you like to purchase now?</h3>
+               <div>
+                    <form action="/orders" method="POST">
+                         <script
+                              src="https://checkout.stripe.com/checkout.js" class="stripe-button"
+                              data-key="pk_test_Ylmex94ZAAzTVbScVbkokWQa00dL7pTWfC"
+                              data-amount="<%= totalPrc * 100 %>"
+                              data-name="Your Order"
+                              data-description="All the products you've ordered"
+                              data-image="https://stripe.com/img/documentation/checkout/marketplace.png"
+                              data-locale="auto"
+                              data-currency="eur">
+                         </script>
+                         <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                    </form>
+               </div>
+
+               <br>
+               <form action="/orders" method="POST">
+                    <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+                    <button type="submit" class="btn">Create Order</button>
+               </form>
+
+          <% } else { %>
+               <h3>You did not select any product to purchase!</h3>
+          <% } %>    
+          
+     </main>
+     <%- include('../includes/end.ejs') %>

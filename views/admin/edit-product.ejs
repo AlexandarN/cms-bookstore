@@ -1,0 +1,64 @@
+<%- include('../includes/head.ejs') %>
+    
+     <link rel="stylesheet" href="/css/forms.css">
+</head>
+
+<body>
+     <%- include('../includes/nav.ejs') %>
+
+     <main>
+          <% if(messages.length > 0) { %>
+               <div class="message message-error"><%= messages %></div>
+          <% } %>
+          
+          <form class="form" action="/admin/<% if(editing) { %>edit-product<% } else { %>add-product<% } %>" method="POST" enctype="multipart/form-data">
+               <% if(validationErrors.find(err => err.param === 'title')) { 
+                    const index = validationErrors.findIndex(err => err.param === 'title'); %>
+                    <br>
+                    <div class="message message-error"><%= validationErrors[index].msg %></div>                         
+               <% } %>
+               <div class="form-control"> 
+                    <label for="title">Title</label>
+                    <input type="text" name="title" id="title" value="<% if(editing) { %><%= prod.title %><% } else { %><%= oldInput.title %><% } %>" class="<%= validationErrors.find(err => err.param === 'title') ? 'invalid' : '' %>">
+               </div>
+
+               <% if(validationErrors.find(err => err.param === 'imageUrl')) { 
+                    const index = validationErrors.findIndex(err => err.param === 'imageUrl'); %>
+                    <br>
+                    <div class="message message-error"><%= validationErrors[index].msg %></div>                         
+               <% } %>
+               <div class="form-control">
+                    <label for="image">Image</label>
+                    <input type="file" name="image" id="image">
+               </div>
+
+               <% if(validationErrors.find(err => err.param === 'price')) { 
+                    const index = validationErrors.findIndex(err => err.param === 'price'); %>
+                    <br>
+                    <div class="message message-error"><%= validationErrors[index].msg %></div>                         
+               <% } %>
+               <div class="form-control">
+                    <label for="price">Price</label>
+                    <input type="number" name="price" id="price" step="0.01" value="<% if(editing) { %><%= prod.price %><% } else { %><%= oldInput.price %><% } %>" class="<%= validationErrors.find(err => err.param === 'price') ? 'invalid' : '' %>">
+               </div>
+
+               <% if(validationErrors.find(err => err.param === 'description')) { 
+                    const index = validationErrors.findIndex(err => err.param === 'description'); %>
+                    <br>
+                    <div class="message message-error"><%= validationErrors[index].msg %></div>                         
+               <% } %>
+               <div class="form-control">
+                    <label for="description">Description</label>
+                    <textarea name="description" id="description" rows="5" class="<%= validationErrors.find(err => err.param === 'description') ? 'invalid' : '' %>"><% if(editing) { %><%= prod.description %><% } else { %><%= oldInput.description %><% } %></textarea>
+               </div>
+
+               <% if (editing) { %>
+                    <input type="hidden" name="productId" value="<%= prod._id %>">
+               <% } %> 
+
+               <input type="hidden" name="_csrf" value="<%= csrfToken %>">
+               <button class="btn" type="submit"><% if(editing) { %>Update Product<% } else { %>Add Product<% } %></button>
+
+          </form>
+     </main>
+<%- include('../includes/end.ejs') %>

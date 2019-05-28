@@ -1,0 +1,6 @@
+{
+     "editor.fontLigatures": true,
+     "emmet.includeLanguages": {
+          "ejs": ["html", "javascript"]
+     }
+}
