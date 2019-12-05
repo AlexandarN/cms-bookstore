@@ -4,16 +4,18 @@ const bodyParser = require('body-parser');
 const multer = require('multer');
 const path = require('path');
 const mongoose = require('mongoose');
+const fs = require('fs');
+const https = require('https');
 
 const session = require('express-session');
 const MongodbSessionStore = require('connect-mongodb-session')(session);
 const csrf = require('csurf');
 const flash = require('connect-flash');
+
+     // PRODUCTION PHASE NPM PACKAGES
 const helmet = require('helmet');
 const compression = require('compression');
 const morgan = require('morgan');
-const fs = require('fs');
-const https = require('https');
 
      // IMPORTING ROUTEs, CONTROLLERs, MODELs
 const adminRoutes = require('./routes/admin');
@@ -21,13 +23,15 @@ const shopRoutes = require('./routes/shop');
 const authRoutes = require('./routes/auth');
 const errorController = require('./controllers/errorController');
 const User = require('./models/User');
+const env = require('./config/env');
 
      // INITIATION of NPM PACKAGEs
 const app = express();
 app.set('view engine', 'ejs');
 app.set('views', 'views');
 
-const MONGODB_URI = `mongodb+srv://${process.env.MONGO_USER}:${process.env.MONGO_PASSWORD}@cluster0-eyxah.mongodb.net/${process.env.MONGO_DEFAULT_DATABASE}?retryWrites=true`;
+
+const MONGODB_URI  = 'mongodb+srv://' + env.mongodbUser + ':' + env.mongodbPassword + '@cluster0-eyxah.mongodb.net/' + env.mongodbDefaultDB; // for deployment phase
 const storeSession = new MongodbSessionStore({uri: MONGODB_URI, collection: 'sessions'});
 const fileStorage = multer.diskStorage({
      destination: (rewq, file, cb) => {
@@ -59,7 +63,12 @@ app.use(multer({storage: fileStorage, fileFilter: fileTypes}).single('image'));
 // app.use(multer({storage: fileStorage}).any('images')); --> za više različitih fajlova
 app.use(express.static(path.resolve('public')));
 app.use('/images', express.static(path.resolve('images')));
-app.use(session({secret: 'my secret', resave: false, saveUninitialized: false, store: storeSession}));
+app.use(session({
+     secret: env.sessionSecret, 
+     resave: false, 
+     saveUninitialized: false, 
+     store: storeSession
+}));
 app.use(csrf());
 app.use(flash());
 
