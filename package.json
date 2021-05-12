@@ -35,7 +35,7 @@
     "morgan": "^1.9.1",
     "multer": "^1.4.1",
     "mysql2": "^1.6.4",
-    "nodemailer": "^5.1.1",
+    "nodemailer": "^6.4.16",
     "nodemailer-sendgrid-transport": "^0.2.0",
     "pdfkit": "^0.9.0",
     "pug": "^2.0.3",
